@@ -1,0 +1,305 @@
+library(ggplot2)
+library(dplyr)
+source('Descriptive_Table.R')
+source('replace_NA.R')
+source('Normal_Standard_Mean.R')
+
+plt <- read.table(file = "g54dma-plant-dataset.csv",header = TRUE,sep = ',')
+head(plt)
+
+############### 1-a-i #################################
+
+sum_plt = descriptive(plt[2:19])
+
+###############  1-a-ii ################################# ( Do it Again! )
+
+nrow(plt)
+# I have 724 observations.
+
+
+hist(plt$CentroidX, col = 8, main = "Hist of CentroidX_default", xlab = "CentroidX")
+hist(plt$CentroidX, breaks = 10, col = 8, main = "Hist of CentroidX_10", xlab = "CentroidX")
+hist(plt$CentroidX, breaks = 20, col = 8, main = "Hist of CentroidX_20", xlab = "CentroidX")
+
+hist(plt$CentroidY, col = 8 ,main = "Hist of CentroidY_default", xlab = "CentroidY")
+hist(plt$CentroidY, breaks = 10, col = 8 ,main = "Hist of CentroidY_10", xlab = "CentroidY")
+hist(plt$CentroidY, breaks = 20, col = 8 ,main = "Hist of CentroidY_20", xlab = "CentroidY")
+hist(plt$CentroidY, breaks = 30, col = 8 ,main = "Hist of CentroidY_30", xlab = "CentroidY")
+
+hist(plt$Mass, col = 8 ,main = "Hist of Mass_df", xlab = "Mass")
+hist(plt$Mass, breaks = 10, col = 8 ,main = "Hist of Mass_10", xlab = "Mass")
+hist(plt$Mass, breaks = 20, col = 8 ,main = "Hist of Mass_20", xlab = "Mass")
+hist(plt$Mass, breaks = 30, col = 8 ,main = "Hist of Mass_30", xlab = "Mass")
+
+hist(plt$Width,col = "blue",main = "Hist of Width", xlab = "Width")
+hist(plt$Depth,col = "red",main = "Hist of Depth", xlab = "Depth")
+hist(plt$Orientation0,col = "blue",main = "Hist of Orientation0", xlab = "Orientation0")
+hist(plt$Orientation1,col = "blue",main = "Hist of Orientation1", xlab = "Orientation1")
+hist(plt$Orientation2,col = "blue",main = "Hist of Orientation2", xlab = "Orientation2")
+hist(plt$Orientation3,col = "blue",main = "Hist of Orientation3", xlab = "Orientation3")
+hist(plt$Orientation4,col = "blue",main = "Hist of Orientation4", xlab = "Orientation4")
+hist(plt$Orientation5,col = "blue",main = "Hist of Orientation5", xlab = "Orientation5")
+hist(plt$Orientation6,col = "blue",main = "Hist of Orientation6", xlab = "Orientation6")
+hist(plt$Orientation7,col = "blue",main = "Hist of Orientation7", xlab = "Orientation7")
+hist(plt$Orientation8,col = "blue",main = "Hist of Orientation8", xlab = "Orientation8")
+hist(plt$Orientation9,col = "blue",main = "Hist of Orientation9", xlab = "Orientation9")
+hist(plt$Leaf.weight,col = "blue",main = "Hist of Leaf.weight", xlab = "Leaf.weight")
+hist(plt$LeafArea,col = "blue",main = "Hist of Leaf.Area", xlab = "LeafArea")
+hist(plt$Leaf.Hue,col = "blue",main = "Hist of Leaf.Hue", xlab = "Leaf.Hue")
+
+
+###############  1-b-i #################################
+
+# use is "complete.obs" then missing values are handled by casewise deletion.
+cor_o1_o7 = cor(plt$Orientation1, plt$Orientation7,use = "complete.obs")
+cor_mass_o0 = cor(plt$Mass, plt$Orientation0,use = "complete.obs")
+cor_o7_o8 = cor(plt$Orientation7, plt$Orientation8,use = "complete.obs")
+sprintf('correlation_o1_o7 is %f, correlation_mass_o0 is %f, and correlation_o7_o8 is %f.',cor_o1_o7,cor_mass_o0,cor_o7_o8)
+
+
+
+###############  1-b-ii & iii #################################
+sub_plt = cbind(plt[2:16],plt[18:19])
+cor_table = as.data.frame(cor(sub_plt,use = "complete.obs"))
+
+# cor_table$Name = c('Cx','Cy','Ms','Wd','Dh','Or0','Or1','Or2','Or3','Or4','Or5','Or6','Or7','Or8','Or9','Lf_A','Lf_H') 
+# By eyes:
+# Max: Ori8 & Ori9  0.95465470
+# Min: Width & Orientation8 0.01175520 
+
+library(dplyr)
+??filter
+cor_table$CentroidX
+
+Min_Ori1 = filter(cor_table, 
+                  cor_table[,1]==min(abs(cor_table[,1])))
+Max_Ori1 = filter(cor_table, 
+                  cor_table[,1]==max(abs(cor_table[,1] & 
+                                           cor_table[,1] != 1)))
+Min_Ori1$Name
+Max_Ori1$Name
+# Haven't done yet WAIT-TO-DO
+
+
+###############  1-b-iv #################################
+
+# Produce scatterplots between the class variable and orientation 2, depth and area variables 
+# (note: you may have to recode the class variable as numeric to produce scatterplots). 
+# What do these tell you about the relationships between these three variables and the class?
+
+
+library(ggplot2)
+
+plt$Class = as.numeric(plt$Class)
+
+pdfName = c('1-b-iv.pdf')
+
+gg_class_Ori2 = ggplot(plt, aes(x = Class, y = Orientation2, color = Class)) +
+  geom_point() + 
+  ggtitle("Class and Orientation2")
+
+
+gg_class_Depth = ggplot(plt, aes(x = Class, y = Depth,color = Class)) +
+  geom_point() +
+  ggtitle("Class and Depth")
+
+gg_class_Area = ggplot(plt, aes(x = Class, y = LeafArea, color = Class)) + 
+  geom_point() + 
+  ggtitle("Class and Area")
+
+
+print(gg_class_Ori2)
+ggsave('1-b-iv-gg_class_Ori2.jpg')
+
+print(gg_class_Depth)
+ggsave('1-b-iv-gg_class_Depth.jpg')
+
+print(gg_class_Area)
+ggsave('1-b-iv-gg_class_Area.jpg')
+
+
+
+
+###############  1-c Outliers & Conclusion #################################
+
+sum_plt <- read.table(file = "1-a-i.csv",header = TRUE,sep = ',')
+sum_plt[,1:5]
+# row1 is mean; row2 is median, row6 is std.
+
+#haven't finished {
+find_outliers = function(plt){
+  too_small = c(plt[1,2] + 3*plt[6,2])
+  too_big = c(plt[1,2] + 3*plt[6,2])
+  for(i in 2:19){
+    too_small = cbind(too_small, c(plt[1,i] + 3*plt[6,i]))
+    too_big = cbind(too_big, c(plt[1,i] - 3*plt[6,i]))
+  }
+}
+# } haven't finished
+  
+  
+###############  1-d #################################
+
+# Write a script in R to find missing values and replace them using three strategies: 
+# replace missing values with 0, mean and median.
+
+# Replace NA by O
+plt_NA_0 = NA_by_0(plt)
+write.csv(plt_NA_0,file = 'plt_NA_0.csv')
+
+
+# Replace NA by mean
+plt_NA_mean = NA_by_mean(plt)
+write.csv(plt_NA_mean,file = 'plt_NA_mean.csv')
+
+
+# Replace NA by mean
+plt_NA_median = NA_by_median(plt)
+write.csv(plt_NA_median,file = 'plt_NA_median.csv')
+
+
+###############  1-e Transforming Data from Lec 5 #################################
+
+# Question: 
+# by three datesets from d, Use three transformation techniques 
+# (mean centering, normalisation and standardisation) 
+# to scale the attributes, and compare their various effects.
+
+
+###############  1-e-1 Mean Centring #################################
+
+# Call the function
+mean_centre_plt_NA_0 = mean_centre(plt_NA_0)
+mean_centre_plt_NA_0
+mean_centre_plt_NA_median = mean_centre(plt_NA_median)
+mean_centre_plt_NA_median
+mean_centre_plt_NA_mean = mean_centre(plt_NA_mean)
+mean_centre_plt_NA_mean
+
+###############  1-e-2 Standardisation (Z-Score) #################################
+
+# Call the function
+standard_z_plt_NA_0 = standard_z(plt_NA_0)
+standard_z_plt_NA_0
+standard_z_plt_NA_median = standard_z(plt_NA_median)
+standard_z_plt_NA_median
+standard_z_plt_NA_mean = standard_z(plt_NA_mean)
+standard_z_plt_NA_mean
+
+# plt_0_scale = scale(plt_NA_0[2:19])
+# plt_mean_scale = scale(plt_NA_median[2:19])
+# plt_median_scale = scale(plt_NA_mean[2:19])
+
+
+###############  1-e-3 Normalizaton (Min-Max) #################################
+
+
+# Call the function
+normal_min_max_NA_0 = normal_min_max(plt_NA_0)
+normal_min_max_NA_0
+normal_min_max_NA_median = normal_min_max(plt_NA_median)
+normal_min_max_NA_median
+normal_min_max_NA_mean = normal_min_max(plt_NA_mean)
+normal_min_max_NA_mean
+
+
+
+###############  1-f-i #################################
+
+
+# Q1:  Missing Value Processing 1 : what's your strategies for attribute and instance deletion for missing value in col/row?
+
+# Step 1: t1 = team[!duplicated(team[,2:3]),] Delete the instances which are the same. 
+# As col2 and col3 are the ones without missing value and the following columns seems the same when col2 and col3 are the same
+unique_plt = plt[!duplicated(plt[2:3]),] 
+nrow(unique_plt) # 703 rows
+
+# call function analysis() in 1-a-i
+analysis(unique_plt[2:19])[8,]
+# As the col_Leaf.weight has 396 NA, account for 56% of the total, so decided to delete it
+
+unique_plt = subset(unique_plt, select = -Leaf.weight)
+uni_sum_plt = analysis(unique_plt[2:18])
+write.csv(unique_plt,file = 'plt_unique_fi.csv')
+write.csv(uni_sum_plt,file = 'plt_uni_sum_fi.csv')
+
+
+# Q2:  Missing Value Processing 2 : How to handle or replace other missing value ?
+
+# Using 0 to replace is not very good, as the observed value is various. (但是是否能用0来让人容易看出这是个异常值呢？)
+# Using Mean & Median mostly is the same according to our dataset, except the column [ CentroidY, Depth, LeafArea ]
+
+# call function of NA replacing in 1-d, replacing NA by 0, mean, median
+
+plt_f_median = NA_by_median(unique_plt)
+write.csv(plt_f_median,file = 'plt_fi_median.csv')
+plt_f_mean = NA_by_mean(unique_plt)
+write.csv(plt_f_mean,file = 'plt_fi_mean.csv')
+plt_f_0 = NA_by_0(unique_plt)
+write.csv(plt_f_0,file = 'plt_fi_0.csv')
+
+
+
+###############  1-f-ii ################################# Do it again !
+
+cor_graph = symnum(cor(plant_f[2:18],use = "complete.obs"))
+
+# From the graph, we can see: 
+# Orientation8 & Orientation9 are extremely high-correlated (>=0.95).
+# Orientation7 & Orientation8 are high-correlated (>=0.90).
+# Orientation6 & Orientation7 are high-correlated (>=0.90).
+# Orientation6 & Orientation1 are high-correlated (>=0.90)
+# ...
+# Only CentroidX,CentroidY,Mass,Width,Depth,Leaf.weight,LeafArea,Leaf.Hue are uncorrelation
+
+plt_uncor = subset(plt[2:19], select = -c(Depth,Orientation0,Orientation1,Orientation3,Orientation4,
+                                 Orientation6,Orientation7,Orientation8))
+head(plt_uncor)
+
+analysis(plt_uncor)[8,] # Got the Missing value of each column
+
+# CentroidX   CentroidY    Mass       Width       Depth   Leaf.weight    LeafArea  Leaf.Hue
+# 0           0              6           6           4         411          13         11
+
+plt_uncor = subset(plt_uncor, select = -c(Leaf.weight))
+nrow(plt_uncor) # return 724 (instances)
+ncol(plt_uncor)
+
+# delete the NA by na.omit()
+plt_uncor_noNA = na.omit(plt_uncor)
+
+# check if NAs have been deleted seccussfully, and output the dataset
+nrow(plt_uncor_noNA)  # return 674 (instances)
+analysis(plt_uncor_noNA)[8,] # returns all 0
+
+write.csv(plt_uncor_noNA,file = 'plt_uncor_noNA_fii.csv')
+
+
+###############  1-f-iii #################################
+head(plt_f_mean)
+ncol(plt_f_mean)
+plt_f_iii = plt_f_mean[,2:18]
+# 4. Before applying PCA: we must standardize our variables with scale() function:
+plt.stand = as.data.frame(scale(plt_f_iii)) # 'standardize' means, (it - average value) / sd
+head(plt.stand)
+sapply(plt.stand,sd) #now, standard deviations are 1
+sapply(plt.stand,mean) #now, mean should be 0 (or very very close to 0)
+
+plt_pca = prcomp(plt.stand,scale=T)
+summary(plt_pca)
+screeplot(plt_pca, type="lines",col=2, main="Variance explained by PC")
+title(xlab="Principal Components")
+ggsave('plt_pca.jpg')
+
+plt_pca_7= plt_pca$x[,1:7]
+
+head(plt_pca_7)
+write.csv(plt_pca_7,file = 'plt_pca_fiii.csv')
+
+
+
+
+
+
+
+
