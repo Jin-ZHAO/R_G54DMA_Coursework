@@ -26,7 +26,7 @@ descriptive = function(plt){
   
   it = as.table(rbind(p_means,p_medians,p_mins,p_maxs,p_ranges,p_IQRs,p_vars,p_sds,p_miss))
   row.names(it) = c('mean','median','min','max','Range','IQR','var','sd','n_NA')
-  write.csv(it,file = 'Descriptive_Table.csv')
+  write.csv(it,file = 'Descriptive.csv')
   return(it)
 }
 
@@ -62,7 +62,7 @@ distribution = function(plt){
   
   it = as.table(rbind(p_means,p_medians,p_mins,p_maxs,p_ranges,p_IQRs,p_vars,p_sds,p_miss,skew,kurtosis))
   row.names(it) = c('mean','median','min','max','Range','IQR','var','sd','n_NA','skewness','kurtosis')
-  write.csv(it,file = 'Describution_Table.csv')
+  write.csv(it,file = 'Describution.csv')
   return(it)
 }
 
