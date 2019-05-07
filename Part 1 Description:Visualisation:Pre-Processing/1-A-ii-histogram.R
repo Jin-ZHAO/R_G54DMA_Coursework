@@ -353,6 +353,8 @@ legend(x = "topright", # location of legend within plot area
        col = c("black", "green", "blue",'red'),
        lwd = c(2, 2, 2))
 
+
+
 # 3. Close the file
 dev.off()
 

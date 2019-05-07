@@ -64,6 +64,28 @@ gg_class_Area = ggplot(plt, aes(x = Class, y = LeafArea, color = Class)) +
   ggtitle("Class and Area") +
   theme(plot.title = element_text(size = 20, face = "bold")) 
 
+gg_class_Mass = ggplot(plt, aes(x = Class, y = Mass, color = Class)) + 
+  geom_point(size = 5, stroke = 1.5, alpha = 1/2, shape = 11 ) + 
+  ggtitle("Class and Mass") +
+  theme(plot.title = element_text(size = 20, face = "bold")) 
+gg_class_Mass 
+
+gg_class_Cy = ggplot(plt, aes(x = Class, y = CentroidY, color = Class)) + 
+  geom_point(size = 5, stroke = 1.5, alpha = 1/2, shape = 11 ) + 
+  ggtitle("Class and CentroidY") +
+  theme(plot.title = element_text(size = 20, face = "bold")) 
+gg_class_Cx
+
+gg_class_Cx = ggplot(plt, aes(x = Class, y = CentroidX, color = Class)) + 
+  geom_point(size = 5, stroke = 1.5, alpha = 1/2, shape = 11 ) + 
+  ggtitle("Class and CentroidX") +
+  theme(plot.title = element_text(size = 20, face = "bold")) 
+
+gg_class_Hue = ggplot(plt, aes(x = Class, y = Leaf.Hue, color = Class)) + 
+  geom_point(size = 5, stroke = 1.5, alpha = 1/2, shape = 11 ) + 
+  ggtitle("Class and Leaf.Hue") +
+  theme(plot.title = element_text(size = 20, face = "bold")) 
+
 print(gg_class_Ori2)
 ggsave("1-b-iv-gg_class_Ori2.jpg")
 
@@ -73,6 +95,17 @@ ggsave('1-b-iv-gg_class_Depth.jpg')
 print(gg_class_Area)
 ggsave('1-b-iv-gg_class_Area.jpg')
 
+print(gg_class_Mass)
+ggsave('1-b-iv-gg_class_Mass.jpg')
+
+print(gg_class_Cy)
+ggsave('1-b-iv-gg_class_Cy.jpg')
+
+print(gg_class_Cx)
+ggsave('1-b-iv-gg_class_Cx.jpg')
+
+print(gg_class_Hue)
+ggsave('1-b-iv-gg_class_Hue.jpg')
 
 
 #############################################  scatterplot matrixs ################################################
